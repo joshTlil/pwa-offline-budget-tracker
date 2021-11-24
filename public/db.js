@@ -17,9 +17,11 @@
 // request.onerror = function (event) {
 //   console.log("Woops! " + event.target.errorCode);
 // };
+const indexedDB = window.indexedDB = window.indexedDB || window.mozIndexedDB || 
+window.webkitIndexedDB || window.msIndexedDB;
 let db;
 // create a new db request for a "budget" database.
-const request = indexedDB.open("budgetDB", 1);
+const request = indexedDB.open("budget", 1);
 
 request.onupgradeneeded = function(event) {
    // create object store called "pending" and set autoIncrement to true
@@ -53,7 +55,7 @@ request.onsuccess = function (event) {
   };
 
 function checkDatabase() {
-  console.log('check db invoked');
+  // console.log('check db invoked');
 
   // Open a transaction into the offline store 
   let transaction = db.transaction(["pending"], "readwrite");
