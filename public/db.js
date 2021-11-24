@@ -1,22 +1,3 @@
-// let db;
-
-
-// // Create a new db request for a "budget" database.
-// const request = indexedDB.open('BudgetDB', 1);
-
-// request.onupgradeneeded = function (event) {
-//   console.log('Upgrade needed in IndexDB');
-
-// let db = event.target.result;
-// // If there are no store names then create one 
-//   // if (db.objectStoreNames.length === 0) {
-//     db.createObjectStore('Offline', { autoIncrement: true });
-//   // }
-// };
-// //error check 
-// request.onerror = function (event) {
-//   console.log("Woops! " + event.target.errorCode);
-// };
 const indexedDB = window.indexedDB = window.indexedDB || window.mozIndexedDB || 
 window.webkitIndexedDB || window.msIndexedDB;
 let db;
