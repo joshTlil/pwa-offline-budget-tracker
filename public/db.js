@@ -1,26 +1,32 @@
+const indexedDB = window.indexedDB = window.indexedDB || window.mozIndexedDB || 
+window.webkitIndexedDB || window.msIndexedDB;
 let db;
+// create a new db request for a "budget" database.
+const request = indexedDB.open("budgetDB", 1);
 
+request.onupgradeneeded = function(event) {
+   // create object store called "pending" and set autoIncrement to true
+  const db = event.target.result;
+  db.createObjectStore("pending", { autoIncrement: true });
+};
 
-// Create a new db request for a "budget" database.
-const request = indexedDB.open('BudgetDB', 1);
+request.onsuccess = function(event) {
+  db = event.target.result;
+  
 
-request.onupgradeneeded = function (e) {
-  console.log('Upgrade needed in IndexDB');
-
-  db = e.target.result;
-// If there are no store names then create one 
-  if (db.objectStoreNames.length === 0) {
-    db.createObjectStore('Offline', { autoIncrement: true });
+  // check if app is online before reading from db
+  if (navigator.onLine) {
+    checkDatabase();
   }
 };
-//error check 
-request.onerror = function (e) {
-  console.log(`Woops! ${e.target.errorCode}`);
+
+request.onerror = function(event) {
+  console.log("Woops! " + event.target.errorCode);
 };
 
-request.onsuccess = function (e) {
+request.onsuccess = function (event) {
     console.log('success');
-    db = e.target.result;
+    db = event.target.result;
   
     // Check if app is online before reading from db
     if (navigator.onLine) {
@@ -30,13 +36,13 @@ request.onsuccess = function (e) {
   };
 
 function checkDatabase() {
-  console.log('check db invoked');
+  // console.log('check db invoked');
 
-  // Open a transaction into the offline store 
-  let transaction = db.transaction(['Offline'], 'readwrite');
+  // Open a transaction into the pending store 
+  let transaction = db.transaction(["pending"], "readwrite");
 
-  // access to offline store object
-  const store = transaction.objectStore('Offline');
+  // access to the pending store object
+  const store = transaction.objectStore("pending");
 
   // Get all records from the store and set to a variable
   const getAll = store.getAll();
@@ -57,11 +63,11 @@ function checkDatabase() {
         .then((res) => {
           // If the returned response is not empty
           if (res.length !== 0) {
-            // Open another transaction to the offline store with the ability to read and write
-            transaction = db.transaction(['Offline'], 'readwrite');
+            // Open another transaction to the pending store with the ability to read and write
+            transaction = db.transaction(["pending"], "readwrite");
 
             // Assign the current store to a variable
-            const currentStore = transaction.objectStore('Offline');
+            const currentStore = transaction.objectStore("pending");
 
             // Clear existing entries when the bulk add was successful
             currentStore.clear();
@@ -74,11 +80,11 @@ function checkDatabase() {
 
 const saveRecord = (record) => {
   console.log('Save record invoked');
-  // Create another transaction on the offline store with readwrite access
-  const transaction = db.transaction(['Offline'], 'readwrite');
+  // Create another transaction in the pending store with readwrite access
+  const transaction = db.transaction(["pending"], "readwrite");
 
-  // Access the Offline object store
-  const store = transaction.objectStore('Offline');
+  // Access the pending object store
+  const store = transaction.objectStore("pending");
 
   // Add record to your store with add method.
   store.add(record);

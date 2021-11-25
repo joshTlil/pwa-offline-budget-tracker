@@ -1,26 +1,28 @@
-const FILES_TO_CACHE = [
-    "/",
-    "/index.html",
-    "/manifest.webmanifest",
-    "/public/icons/icon-192x192.png",
-    "/public/icons/icon-512x512.png",
-    "https://cdn.jsdelivr.net/npm/chart.js@2.8.0",
-    "/public/style.css"
-];
-
 const CACHE_NAME = "static-cache-v2";
 const DATA_CACHE_NAME = "data-cache-v1";
 
+const cacheFiles = [
+    "/",
+    "/db.js",
+    "/index.html",
+    "/manifest.webmanifest",
+    "/icons/icon-192x192.png",
+    "/icons/icon-512x512.png",
+    "https://cdn.jsdelivr.net/npm/chart.js@2.8.0",
+    "/styles.css"
+];
+
+
 self.addEventListener("install", function(evt) {
-    evt.waitUntil(
-      caches.open(CACHE_NAME).then(cache => {
-        console.log("Your files were pre-cached successfully!");
-        return cache.addAll(FILES_TO_CACHE);
-      })
-    );
-  
-    self.skipWaiting();
-  });
+  evt.waitUntil(
+    caches.open(CACHE_NAME).then(cache => {
+      console.log("Your files were pre-cached successfully!");
+      return cache.addAll(cacheFiles);
+    })
+  );
+
+  self.skipWaiting();
+});
 
   self.addEventListener("fetch", function(evt) {
     // cache successful requests to the API
