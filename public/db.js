@@ -38,10 +38,10 @@ request.onsuccess = function (event) {
 function checkDatabase() {
   // console.log('check db invoked');
 
-  // Open a transaction into the offline store 
+  // Open a transaction into the pending store 
   let transaction = db.transaction(["pending"], "readwrite");
 
-  // access to offline store object
+  // access to the pending store object
   const store = transaction.objectStore("pending");
 
   // Get all records from the store and set to a variable
@@ -63,7 +63,7 @@ function checkDatabase() {
         .then((res) => {
           // If the returned response is not empty
           if (res.length !== 0) {
-            // Open another transaction to the offline store with the ability to read and write
+            // Open another transaction to the pending store with the ability to read and write
             transaction = db.transaction(["pending"], "readwrite");
 
             // Assign the current store to a variable
@@ -80,10 +80,10 @@ function checkDatabase() {
 
 const saveRecord = (record) => {
   console.log('Save record invoked');
-  // Create another transaction on the offline store with readwrite access
+  // Create another transaction in the pending store with readwrite access
   const transaction = db.transaction(["pending"], "readwrite");
 
-  // Access the Offline object store
+  // Access the pending object store
   const store = transaction.objectStore("pending");
 
   // Add record to your store with add method.
